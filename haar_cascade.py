@@ -72,7 +72,6 @@ def face_detection_app():
             gray_img = cv.cvtColor(img, cv.COLOR_BGR2GRAY) 
 
             # haar_cascade = cv.CascadeClassifier('assets/haarcascade_frontalface_default.xml') 
-            # faces_rect = haar_cascade.detectMultiScale(gray_img, 1.1, 9)
 
             haar_cascade_path = 'assets/haarcascade_frontalface_default.xml'
             if not os.path.exists(haar_cascade_path):
@@ -84,6 +83,8 @@ def face_detection_app():
                 st.error("Không thể tải tệp Haar Cascade. Vui lòng kiểm tra tệp và đường dẫn.")
                 return
 
+            faces_rect = haar_cascade.detectMultiScale(gray_img, 1.1, 9)
+            
             for (x, y, w, h) in faces_rect:
                 cv.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
 

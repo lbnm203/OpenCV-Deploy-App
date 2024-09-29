@@ -71,7 +71,7 @@ def face_detection_app():
             col2.markdown('### Ảnh sau khi nhận dạng')
             gray_img = cv.cvtColor(img, cv.COLOR_BGR2GRAY) 
 
-            haar_cascade = cv.CascadeClassifier('D:/OpenCV/assets/haarcascade_frontalface_default.xml') 
+            haar_cascade = cv.CascadeClassifier('assets/haarcascade_frontalface_default.xml') 
             faces_rect = haar_cascade.detectMultiScale(gray_img, 1.1, 9)
 
             for (x, y, w, h) in faces_rect:

@@ -1,106 +1,86 @@
-# Khởi tạo dữ liệu
-# face_data_dir = 'D:/OpenCV/Haar/faces_and_non_faces_data/faces_24x24'  # Thư mục chứa ảnh khuôn mặt
-# non_face_data_dir = 'D:/OpenCV/Haar/faces_and_non_faces_data/non_faces_24x24'  # Thư mục chứa ảnh không phải khuôn mặt
-
-import streamlit as st
-import cv2
+import cv2 as cv
 import numpy as np
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
-import seaborn as sns
-import matplotlib.pyplot as plt
 import os
+import streamlit as st
+from PIL import Image
 
-st.title('Face Detection using Haar Cascade and kNN')
+# Thiết lập cấu hình trang để full width
 
-# Hàm tải và xử lý ảnh từ webcam hoặc tệp tin
-def process_image(image, model, face_cascade):
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(24, 24))
+def load_dataset():
+    face = []
+    non_face = []
+    face_dataset = []
     
-    if len(faces) > 0:
-        for (x, y, w, h) in faces:
-            face = gray[y:y+h, x:x+w]
-            face_resized = cv2.resize(face, (24, 24)).flatten()  # Resizing ảnh thành 24x24
-            label = model.predict([face_resized])[0]  # Dự đoán nhãn với mô hình kNN
-            
-            if label == 1:
-                cv2.putText(image, 'Face Detected', (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
-                cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
+    dir_face = os.listdir('Haar/faces_24x24')
+    dir_non_face = os.listdir('Haar/non_faces_24x24')
+
+    for i in range(100):
+        path_face = 'Haar/faces_24x24/' + dir_face[i]
+        path_non = 'Haar/non_faces_24x24/' + dir_non_face[i]
+        
+        image_face = cv.imread(path_face)
+        if image_face is not None:
+            image_face = cv.cvtColor(image_face, cv.COLOR_BGR2GRAY)
+            face.append(image_face)
+        else:
+            print(f"Không thể đọc ảnh: {path_face}")
+
+        image_non = cv.imread(path_non)
+        if image_non is not None:
+            image_non = cv.cvtColor(image_non, cv.COLOR_BGR2GRAY)
+            if len(non_face) < 50:
+                non_face.append(image_non)
+        else:
+            print(f"Không thể đọc ảnh: {path_non}")    
+
+    for i in range(len(face)):
+        face_dataset.append(face[i])
+    for i in range(len(non_face)):
+        face_dataset.append(non_face[i])
+    
+    labels = np.array([1] * 100 + [0] * 50)
+    face_dataset = np.array(face_dataset)
+
+    return face_dataset, labels
+
+
+def face_detection_app():
+    st.title('✨ Ứng dụng Face Detection Haar')
+
+    st.markdown(""" 
+        * ####  Hướng dẫn sử dụng:
+            - Chọn ảnh phía bên thanh trái để tải ảnh lên
+            - Nhấn nút "Detect" để tiến hành nhận dạng ảnh tải lên
+    """)
+
+    st.divider()
+
+    st.sidebar.title('Upload your image')
+    image_upload = st.sidebar.file_uploader(" ", type=["png", "jpg", "jpeg"])
+
+    if image_upload is not None:
+        # Tạo 2 cột
+        col1, col2 = st.columns(2)
+
+        col1.markdown('### Ảnh trước khi nhận dạng')
+        img = Image.open(image_upload)
+        img = np.array(img)
+        col1.image(img, channels="RGB")
+
+        if col1.button('Detect', type="primary"):
+            col2.markdown('### Ảnh sau khi nhận dạng')
+            gray_img = cv.cvtColor(img, cv.COLOR_BGR2GRAY) 
+
+            haar_cascade = cv.CascadeClassifier('D:/OpenCV/assets/haarcascade_frontalface_default.xml') 
+            faces_rect = haar_cascade.detectMultiScale(gray_img, 1.1, 9)
+
+            for (x, y, w, h) in faces_rect:
+                cv.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
+
+            col2.image(img, channels="RGB")
+
+            if len(faces_rect) > 0:
+                col2.markdown('#### Kết quả: Có chứa khuôn mặt</span>', unsafe_allow_html=True)
             else:
-                cv2.putText(image, 'Non-Face', (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
-                cv2.rectangle(image, (x, y), (x+w, y+h), (0, 0, 255), 2)
+                col2.markdown('#### Kết quả: Không chứa khuôn mặt', unsafe_allow_html=True)
 
-    return image
-
-# Khởi tạo dữ liệu
-face_data_dir = 'D:/OpenCV/Haar/faces_and_non_faces_data/faces_24x24'  # Thư mục chứa ảnh khuôn mặt
-non_face_data_dir = 'D:/OpenCV/Haar/faces_and_non_faces_data/non_faces_24x24'  # Thư mục chứa ảnh không phải khuôn mặt
-
-faces = []
-non_faces = []
-
-# Tải ảnh khuôn mặt
-for file in os.listdir(face_data_dir):
-    if file.endswith('.jpg') or file.endswith('.png'):
-        img = cv2.imread(os.path.join(face_data_dir, file), cv2.IMREAD_GRAYSCALE)
-        faces.append(img.flatten())  # Chuyển ảnh thành vector
-
-# Tải ảnh không phải khuôn mặt
-for file in os.listdir(non_face_data_dir):
-    if file.endswith('.jpg') or file.endswith('.png'):
-        img = cv2.imread(os.path.join(non_face_data_dir, file), cv2.IMREAD_GRAYSCALE)
-        non_faces.append(img.flatten())  # Chuyển ảnh thành vector
-
-# Gán nhãn cho dữ liệu: 1 cho khuôn mặt, 0 cho không phải khuôn mặt
-face_labels = [1] * len(faces)
-non_face_labels = [0] * len(non_faces)
-
-# Gộp dữ liệu và nhãn lại thành một bộ dataset hoàn chỉnh
-X = np.array(faces + non_faces)
-y = np.array(face_labels + non_face_labels)
-
-# Chia dữ liệu thành tập huấn luyện và kiểm tra
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# Huấn luyện mô hình kNN
-knn = KNeighborsClassifier(n_neighbors=3)
-knn.fit(X_train, y_train)
-
-# Đánh giá mô hình
-y_pred = knn.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-report = classification_report(y_test, y_pred, target_names=['Non-Face', 'Face'])
-conf_matrix = confusion_matrix(y_test, y_pred)
-
-# Hiển thị các chỉ số đánh giá trên Streamlit
-st.subheader("Evaluation Metrics")
-st.text(f"Accuracy: {accuracy * 100:.2f}%")
-st.text("Classification Report")
-st.text(report)
-
-# Vẽ confusion matrix
-st.text("Confusion Matrix")
-fig, ax = plt.subplots()
-sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", xticklabels=['Non-Face', 'Face'], yticklabels=['Non-Face', 'Face'], ax=ax)
-st.pyplot(fig)
-
-# Khởi tạo Haar Cascade và webcam
-face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-cap = cv2.VideoCapture(0)
-
-# Hiển thị webcam
-st.header("Webcam Live Feed")
-frame_placeholder = st.empty()
-
-while cap.isOpened():
-    ret, frame = cap.read()
-    if not ret:
-        break
-    
-    # Dự đoán khuôn mặt hoặc không khuôn mặt
-    frame = process_image(frame, knn, face_cascade)
-    frame_placeholder.image(frame, channels="BGR")
-
-cap.release()

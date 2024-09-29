@@ -40,17 +40,17 @@ if choice == 'WaterShed':
     st.title(" ✨ Ứng dụng phân đoạn WaterShed")
 
 
-    path = ['./images/3xemay1128.jpg', './images/3xemay925.jpg', 
-            './images/3xemay918.jpg', './images/3xemay1264.jpg']
+    path = ['images/3xemay1128.jpg', 'images/3xemay925.jpg', 
+            'images/3xemay918.jpg', 'images/3xemay1264.jpg']
 
-    path_gt = ['./images/3xemay1128.png', './images/3xemay925.png', 
-            './images/3xemay918.png', './images/3xemay1264.png']
+    path_gt = ['images/3xemay1128.png', 'images/3xemay925.png', 
+            'images/3xemay918.png', 'images/3xemay1264.png']
 
     # name = ['3xemay1128.jpg', '3xemay925.jpg', '3xemay918.jpg', '3xemay1264.jpg']
 
     list_image = ["Ảnh 1", "Ảnh 2", "Ảnh 3", "Ảnh 4"]
 
-    path_IoU_img = './assets/IoU.png'
+    path_IoU_img = 'assets/IoU.png'
     image_IoU = Image.open(path_IoU_img)
 
     list_images = []
@@ -167,10 +167,10 @@ if choice == 'WaterShed':
         st.markdown("#### Độ đo được sử dụng và đánh giá: IoU và Dice Coefficient")
         col1, col2 = st.columns(2)
         col1.markdown("##### Công thức IoU:")
-        image_iou = Image.open('./assets/IoU.png')
+        image_iou = Image.open('assets/IoU.png')
         col1.image(image_iou)
         col2.markdown("##### Công thức Dice Coefficient:")
-        image_dice = Image.open('./assets/dice-coefficient.jpg')
+        image_dice = Image.open('assets/dice-coefficient.jpg')
         col2.image(image_dice)
 
         st.markdown("##### - Biểu đồ đánh giá của các độ đo theo threshold và kernel")

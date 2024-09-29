@@ -6,9 +6,10 @@ from streamlit_drawable_canvas import st_canvas
 import grabcut as ga
 import watershed_app as ws
 import matplotlib.pyplot as plt
+import haar_cascade as hr
 # import watershed_app as wt
 
-choice = st.sidebar.selectbox("Chọn thuật toán", ['GrabCut', 'WaterShed', 'Harr'])
+choice = st.sidebar.selectbox("Chọn thuật toán", ['GrabCut', 'WaterShed', 'Haar Cascade'])
 
 if choice == 'GrabCut':
     st.sidebar.write("## Tải ảnh lên")
@@ -488,3 +489,5 @@ if choice == 'WaterShed':
         calc()
 
 
+if choice == 'Haar Cascade':
+    hr.face_detection_app()

@@ -497,4 +497,5 @@ if choice == 'WaterShed':
 
 
 if choice == 'Haar Cascade':
+    hr.display_sample_images()
     hr.face_detection_app()

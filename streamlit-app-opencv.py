@@ -32,8 +32,15 @@ if choice == 'GrabCut':
 
     if uploaded_file is not None:
         image = Image.open(uploaded_file)
-        image = image.resize((700, 500))
-        img_np = np.array(image)
+        image.thumbnail((700, 500))
+
+        # Padding để tạo ảnh 700x500
+        background = Image.new(
+            'RGB', (700, 500), (255, 255, 255))  # Màu nền trắng
+        offset = ((700 - image.width) // 2, (500 - image.height) // 2)
+        background.paste(image, offset)
+
+        img_np = np.array(background)
         app = ga.grabcut_app(img_np)
 
 

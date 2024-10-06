@@ -43,6 +43,36 @@ def load_dataset():
 
     return face_dataset, labels
 
+def display_sample_images():
+    st.title("Mô tả tập dữ liệu")
+
+    st.markdown("#### Một số hình ảnh từ tập dữ liệu")
+
+    # Đọc một vài ảnh từ folder face
+    face_dir = "faces_24x24"
+    non_face_dir = "non_faces_24x24"
+
+    face_images = os.listdir(face_dir)
+    non_face_images = os.listdir(non_face_dir)
+
+    # Chọn ngẫu nhiên một vài ảnh
+    random_face_images = random.sample(face_images, 5)
+    random_non_face_images = random.sample(non_face_images, 5)
+
+    # Hiển thị ảnh khuôn mặt
+    st.subheader("Ảnh Khuôn Mặt")
+    cols = st.columns(5)
+    for idx, img_name in enumerate(random_face_images):
+        img = Image.open(os.path.join(face_dir, img_name))
+        cols[idx].image(img, caption=f"{img_name}", use_column_width=True)
+
+    # Hiển thị ảnh không phải khuôn mặt
+    st.subheader("Ảnh Không Phải Khuôn Mặt")
+    cols = st.columns(5)
+    for idx, img_name in enumerate(random_non_face_images):
+        img = Image.open(os.path.join(non_face_dir, img_name))
+        cols[idx].image(img, caption=f"{img_name}", use_column_width=True)
+
 
 def face_detection_app():
     st.title('✨ Ứng dụng Face Detection Haar')

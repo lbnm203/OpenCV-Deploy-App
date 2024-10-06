@@ -3,6 +3,7 @@ import numpy as np
 import os
 import streamlit as st
 from PIL import Image
+import random
 
 # Thiết lập cấu hình trang để full width
 

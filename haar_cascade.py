@@ -49,8 +49,8 @@ def display_sample_images():
     st.markdown("#### Một số hình ảnh từ tập dữ liệu")
 
     # Đọc một vài ảnh từ folder face
-    face_dir = "faces_24x24"
-    non_face_dir = "non_faces_24x24"
+    face_dir = "Haar/faces_24x24"
+    non_face_dir = "Haar/non_faces_24x24"
 
     face_images = os.listdir(face_dir)
     non_face_images = os.listdir(non_face_dir)

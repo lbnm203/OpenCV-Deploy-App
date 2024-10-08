@@ -78,6 +78,8 @@ def display_sample_images():
 def face_detection_app():
     st.title('✨ Ứng dụng Face Detection Haar')
 
+    display_sample_images()
+
     st.markdown(""" 
         * ####  Hướng dẫn sử dụng:
             - Chọn ảnh phía bên thanh trái để tải ảnh lên

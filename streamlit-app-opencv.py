@@ -9,8 +9,16 @@ import matplotlib.pyplot as plt
 import haar_cascade as hr
 # import watershed_app as wt
 
+<<<<<<< HEAD
 choice = st.sidebar.selectbox(
     "Chọn thuật toán", ['GrabCut', 'WaterShed', 'Haar Cascade'])
+=======
+
+st.set_page_config(layout='wide')
+
+
+choice = st.sidebar.selectbox("Chọn thuật toán", ['GrabCut', 'WaterShed', 'Haar Cascade'])
+>>>>>>> e3d6e8c1940afc2b9f48a9889f482c5de9258b15
 
 if choice == 'GrabCut':
     st.sidebar.write("## Tải ảnh lên")

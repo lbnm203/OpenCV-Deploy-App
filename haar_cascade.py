@@ -4,10 +4,13 @@ import os
 import streamlit as st
 from PIL import Image
 import random
+<<<<<<< HEAD
 import matplotlib.pyplot as plt
 import xml.etree.ElementTree as ET
 from sklearn.neighbors import KNeighborsClassifier
 import pickle
+=======
+>>>>>>> e3d6e8c1940afc2b9f48a9889f482c5de9258b15
 
 # Thiết lập cấu hình trang để full width
 
@@ -136,8 +139,13 @@ def display_sample_images():
     st.markdown("### Một số ảnh minh họa")
 
     # Đọc một vài ảnh từ folder face
+<<<<<<< HEAD
     face_dir = "data/Haar/faces_24x24"
     non_face_dir = "data/Haar/non_faces_24x24"
+=======
+    face_dir = "Haar/faces_24x24"
+    non_face_dir = "Haar/non_faces_24x24"
+>>>>>>> e3d6e8c1940afc2b9f48a9889f482c5de9258b15
 
     face_images = os.listdir(face_dir)
     non_face_images = os.listdir(non_face_dir)
@@ -219,9 +227,19 @@ def face_detection_app():
 
     st.title('✨ Ứng dụng Face Detection Haar')
 
+<<<<<<< HEAD
     # display_dataset()
     display_sample_images()
     display_testing()
+=======
+    display_sample_images()
+
+    st.markdown(""" 
+        * ####  Hướng dẫn sử dụng:
+            - Chọn ảnh phía bên thanh trái để tải ảnh lên
+            - Nhấn nút "Detect" để tiến hành nhận dạng ảnh tải lên
+    """)
+>>>>>>> e3d6e8c1940afc2b9f48a9889f482c5de9258b15
 
     st.title("2. Quá trình huấn luyện")
 

@@ -13,7 +13,7 @@ import haar_cascade as hr
 choice = st.sidebar.selectbox(
     "Chọn thuật toán", ['GrabCut', 'WaterShed', 'Haar Cascade'])
 
-st.set_page_config(layout='wide')
+# st.set_page_config(layout='wide')
 
 
 choice = st.sidebar.selectbox("Chọn thuật toán", ['GrabCut', 'WaterShed', 'Haar Cascade'])
